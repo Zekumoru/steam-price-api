@@ -1,5 +1,5 @@
 import express from 'express';
-import getSteamPrice from '../utils/getSteamPrice.js';
+import getSteamTitlesPrices from '../utils/getSteamTitlesPrices.js';
 
 const router = express.Router();
 
@@ -21,18 +21,9 @@ router.post('/', async (req, res) => {
     return;
   }
 
-  const items = [];
-  for (let i = 0; i < titles.length; i++) {
-    const title = titles[i];
-    items.push({
-      title,
-      price: await getSteamPrice(title),
-    });
-  }
-
   res.json({
     success: true,
-    items,
+    items: await getSteamTitlesPrices(titles),
   });
 });
 
