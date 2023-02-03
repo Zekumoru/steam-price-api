@@ -1,0 +1,19 @@
+{
+  "name": "steam-price-fetcher",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.3.2",
+    "body-parser": "^1.20.1",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
