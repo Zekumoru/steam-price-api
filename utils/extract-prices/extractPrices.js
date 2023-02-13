@@ -1,4 +1,4 @@
-const PRICE_REGEX = /\d+[,.]?\d*/g;
+const PRICE_REGEX = /[\d,.]+[,.]?\d*/g;
 
 const fromPriceToNumber = (priceString) => {
   const normalized = priceString.replace(',', '.');
@@ -23,6 +23,29 @@ const extractCurrencies = (string) => {
       .filter((m) => m[0])
       // remove any regex bloat data (e.g. index of the match, etc.)
       .map((currencyString) => currencyString[0])
+  );
+};
+
+const extractTexts = (string, currency) => {
+  // this fixes an error with regex where it
+  // doesn't match $ since it's a special character.
+  // p.s. \\$ or [$] did not work to fix it!
+  if (currency === '$') {
+    string = string.replaceAll('$', '[[DOLLAR-SYMBOL]]');
+    currency = '\\[\\[DOLLAR-SYMBOL\\]\\]';
+  }
+
+  const onLeft = new RegExp(`^${currency}`).test(string.trim());
+  let pattern;
+
+  if (onLeft) {
+    pattern = new RegExp(`${currency}\\s*[\\d,.]+[,.]?[\\d\\s]`, 'g');
+  } else {
+    pattern = new RegExp(`[\\d,.]+[,.]?[\\d\\s]\\s*${currency}`, 'g');
+  }
+
+  return [...string.trim().matchAll(pattern)].map((text) =>
+    text[0].trim().replace('[[DOLLAR-SYMBOL]]', '$')
   );
 };
 
@@ -52,7 +75,9 @@ function extractPrices(string) {
     );
   });
 
-  return [prices, currencies[0]];
+  const texts = extractTexts(string, currencies[0]);
+
+  return [prices, currencies[0], texts];
 }
 
 export default extractPrices;

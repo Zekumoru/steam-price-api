@@ -39,4 +39,22 @@ describe('Extract prices', () => {
       extractPrices(priceString);
     }).toThrowError(/varying currencies are not allowed/i);
   });
+
+  it('should extract the prices (EUR) in the same format as the input, basically extracting each price string in the input string', () => {
+    const priceString = '4,99€ 2,99€';
+
+    const texts = extractPrices(priceString)[2];
+
+    expect(texts[0]).toBe('4,99€');
+    expect(texts[1]).toBe('2,99€');
+  });
+
+  it('should extract the prices (USD) in the same format as the input, basically extracting each price string in the input string', () => {
+    const priceString = '$4.99 $2.99';
+
+    const texts = extractPrices(priceString)[2];
+
+    expect(texts[0]).toBe('$4.99');
+    expect(texts[1]).toBe('$2.99');
+  });
 });
