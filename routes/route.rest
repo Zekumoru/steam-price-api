@@ -1,4 +1,4 @@
-POST http://localhost:3000/steam-price
+POST http://localhost:8000/steam-price
 Content-Type: application/json
 
 {
