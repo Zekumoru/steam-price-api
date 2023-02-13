@@ -25,7 +25,7 @@ const getSteamPrice = async (title) => {
   if (priceString.match(/free/i)) {
     returnObj.value = 0;
     returnObj.text = 'Free to Play';
-  } else if (priceString.match(/unavailable/i)) {
+  } else if (priceString.match(/unavailable/i) || priceString === '') {
     returnObj.value = -1;
     returnObj.text = 'Unavailable';
   } else {

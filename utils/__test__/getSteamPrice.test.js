@@ -53,6 +53,24 @@ describe('Get steam price', () => {
     expect(original_string).toBe('original string');
   });
 
+  it('should return unavailable for games that have no prices', async () => {
+    jest
+      .spyOn(getSteamSearchResultsModule, 'default')
+      .mockImplementation(async (title) => {
+        if (title !== 'oneshot') {
+          throw new SyntaxError(
+            "Make sure that the game's prices being retrieved is the same as the one in this test"
+          );
+        }
+        const oneshotResults = (await import('./data/oneshot.json')).default;
+        oneshotResults[0].price = '';
+        return oneshotResults;
+      });
+    const { text } = await getSteamPrice('oneshot');
+
+    expect(text).toBe('Unavailable');
+  });
+
   test('that original string is present in the result', async () => {
     jest
       .spyOn(getSteamSearchResultsModule, 'default')
