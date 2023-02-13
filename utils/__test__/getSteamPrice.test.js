@@ -18,6 +18,7 @@ describe('Get steam price', () => {
     expect(value).toBeCloseTo(9.99);
     expect(currency).toBe('€');
   });
+
   it('should return the text price of the game', async () => {
     jest
       .spyOn(getSteamSearchResultsModule, 'default')
@@ -50,6 +51,22 @@ describe('Get steam price', () => {
     const { original_string } = await getSteamPrice('oneshot');
 
     expect(original_string).toBe('original string');
+  });
+
+  test('that original string is present in the result', async () => {
+    jest
+      .spyOn(getSteamSearchResultsModule, 'default')
+      .mockImplementation(async (title) => {
+        if (title !== 'minecraft') {
+          throw new SyntaxError(
+            "Make sure that the game's prices being retrieved is the same as the one in this test"
+          );
+        }
+        return (await import('./data/minecraft.json')).default;
+      });
+    const { original_string } = await getSteamPrice('minecraft');
+
+    expect(original_string).toBe('Unavailable');
   });
 
   it("should return price of -1 and text of 'Unavailable' for games that are unavailable for purchase", async () => {

@@ -3,8 +3,14 @@ import getSteamSearchResults from './getSteamSearchResults.js';
 
 const getSteamPrice = async (title) => {
   const searchResults = await getSteamSearchResults(title);
-  let priceString = 'Unavailable';
+  const returnObj = {
+    value: 0,
+    original_string: '',
+    text: undefined,
+    original_string: undefined,
+  };
 
+  let priceString = 'Unavailable';
   for (let i = 0; i < searchResults.length; i++) {
     const searchResult = searchResults[i];
 
@@ -14,27 +20,22 @@ const getSteamPrice = async (title) => {
     }
   }
 
+  returnObj.original_string = priceString;
+
   if (priceString.match(/free/i)) {
-    return {
-      value: 0,
-      text: 'Free to Play',
-    };
+    returnObj.value = 0;
+    returnObj.text = 'Free to Play';
+  } else if (priceString.match(/unavailable/i)) {
+    returnObj.value = -1;
+    returnObj.text = 'Unavailable';
+  } else {
+    const extracted = extractPrices(priceString);
+    returnObj.value = extracted[0][0];
+    returnObj.currency = extracted[1];
+    returnObj.text = extracted[2][0];
   }
 
-  if (priceString.match(/unavailable/i)) {
-    return {
-      value: -1,
-      text: 'Unavailable',
-    };
-  }
-
-  const extracted = extractPrices(priceString);
-  return {
-    value: extracted[0][0],
-    currency: extracted[1],
-    text: extracted[2][0],
-    original_string: priceString,
-  };
+  return returnObj;
 };
 
 export default getSteamPrice;
