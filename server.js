@@ -10,4 +10,4 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/steam-price', router);
 
-app.listen(8000, () => console.log('Server has started'));
+app.listen(3000, () => console.log('Server has started'));
