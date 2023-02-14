@@ -5,7 +5,7 @@ const getSteamPrice = async (title) => {
   const searchResults = await getSteamSearchResults(title);
   const returnObj = {
     value: 0,
-    original_string: '',
+    currency: {},
     text: undefined,
     original_string: undefined,
   };

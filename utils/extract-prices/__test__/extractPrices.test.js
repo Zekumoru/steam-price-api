@@ -5,13 +5,21 @@ describe('Extract prices', () => {
     const priceString = '2,99€';
 
     expect(extractPrices(priceString)[0][0]).toBeCloseTo(2.99);
-    expect(extractPrices(priceString)[1]).toBe('€');
+    expect(extractPrices(priceString)[1].symbol).toBe('€');
+  });
+
+  it("should extract currency's placement, meaning whether it is on the left or right of the price value", () => {
+    const euroPriceString = '2,99€';
+    const dollarPriceString = '$2,99';
+
+    expect(extractPrices(euroPriceString)[1].placement).toBe('right');
+    expect(extractPrices(dollarPriceString)[1].placement).toBe('left');
   });
 
   it('should deal with string inputs with spaces', () => {
     const priceString = '2,99 €';
 
-    expect(extractPrices(priceString)[1]).toBe('€');
+    expect(extractPrices(priceString)[1].symbol).toBe('€');
   });
 
   it('should extract multiple prices', () => {
@@ -21,7 +29,7 @@ describe('Extract prices', () => {
 
     expect(prices[0]).toBeCloseTo(4.99);
     expect(prices[1]).toBeCloseTo(2.99);
-    expect(currency).toBe('€');
+    expect(currency.symbol).toBe('€');
   });
 
   it('must throw an error if a currency is not present in the input string', () => {

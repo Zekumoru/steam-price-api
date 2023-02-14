@@ -44,9 +44,12 @@ const extractTexts = (string, currency) => {
     pattern = new RegExp(`[\\d,.]+[,.]?[\\d\\s]\\s*${currency}`, 'g');
   }
 
-  return [...string.trim().matchAll(pattern)].map((text) =>
-    text[0].trim().replace('[[DOLLAR-SYMBOL]]', '$')
-  );
+  return [
+    [...string.trim().matchAll(pattern)].map((text) =>
+      text[0].trim().replace('[[DOLLAR-SYMBOL]]', '$')
+    ),
+    onLeft ? 'left' : 'right',
+  ];
 };
 
 function extractPrices(string) {
@@ -75,9 +78,9 @@ function extractPrices(string) {
     );
   });
 
-  const texts = extractTexts(string, currencies[0]);
+  const [texts, placement] = extractTexts(string, currencies[0]);
 
-  return [prices, currencies[0], texts];
+  return [prices, { symbol: currencies[0], placement }, texts];
 }
 
 export default extractPrices;

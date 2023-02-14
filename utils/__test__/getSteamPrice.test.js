@@ -16,7 +16,7 @@ describe('Get steam price', () => {
     const { value, currency } = await getSteamPrice('oneshot');
 
     expect(value).toBeCloseTo(9.99);
-    expect(currency).toBe('€');
+    expect(currency.symbol).toBe('€');
   });
 
   it('should return the text price of the game', async () => {
@@ -101,7 +101,7 @@ describe('Get steam price', () => {
     const { value, currency, text } = await getSteamPrice('minecraft');
 
     expect(value).toBeCloseTo(-1);
-    expect(currency).toBe(undefined);
+    expect(currency.symbol).toBe(undefined);
     expect(text).toBe('Unavailable');
   });
 
@@ -122,7 +122,7 @@ describe('Get steam price', () => {
     const { value, currency, text } = await getSteamPrice('undertale');
 
     expect(value).toBeCloseTo(0);
-    expect(currency).toBe(undefined);
+    expect(currency.symbol).toBe(undefined);
     expect(text).toBe('Free to Play');
   });
 });
