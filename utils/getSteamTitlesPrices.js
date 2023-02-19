@@ -1,12 +1,10 @@
 import getSteamPrice from './getSteamPrice.js';
+import getSteamTitlePrice from './getSteamTitlePrice.js';
 
 const getSteamTitlesPrices = async (titles) => {
   return await Promise.all(
     titles.map((title) => {
-      return (async () => ({
-        title,
-        price: await getSteamPrice(title),
-      }))();
+      return (async () => await getSteamTitlePrice(title))();
     })
   );
 };
