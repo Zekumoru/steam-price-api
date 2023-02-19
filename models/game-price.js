@@ -15,10 +15,7 @@ const PriceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  original_string: {
-    type: String,
-    required: true,
-  },
+  original_string: String,
 });
 
 const GamePriceSchema = new mongoose.Schema({
