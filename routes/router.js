@@ -1,7 +1,31 @@
 import express from 'express';
-import getSteamTitlesPrices from '../utils/getSteamTitlesPrices.js';
+import GamePriceModel from '../models/game-price.js';
+import getSteamTitlePrice from '../utils/getSteamTitlePrice.js';
 
 const router = express.Router();
+
+const getGamePriceFromDB = async (title) => {
+  return await GamePriceModel.findOne({ title });
+};
+
+const saveGamePriceToDB = async (steamPrice) => {
+  const { currency, ...price } = steamPrice.price;
+
+  const gamePrice = new GamePriceModel({
+    title: steamPrice.title,
+    price: {
+      value: price.value,
+      text: price.text,
+      original_string: price.original_string,
+      currency: {
+        symbol: currency.symbol,
+        placement: currency.placement,
+      },
+    },
+  });
+
+  await gamePrice.save();
+};
 
 router.get('/', (req, res) => {
   res.status(400).json({
@@ -21,10 +45,30 @@ router.post('/', async (req, res) => {
     return;
   }
 
-  res.json({
-    success: true,
-    items: await getSteamTitlesPrices(titles),
-  });
+  try {
+    const steamPrices = await Promise.all(
+      titles.map((title) => {
+        return (async () => {
+          const gamePrice = await getGamePriceFromDB(title);
+          if (gamePrice != null) return gamePrice;
+
+          const steamPrice = await getSteamTitlePrice(title);
+          await saveGamePriceToDB(steamPrice);
+          return steamPrice;
+        })();
+      })
+    );
+
+    res.status(201).json({
+      success: true,
+      items: steamPrices,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 export default router;
