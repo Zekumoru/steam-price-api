@@ -50,10 +50,14 @@ router.post('/', async (req, res) => {
       titles.map((title) => {
         return (async () => {
           const gamePrice = await getGamePriceFromDB(title);
-          if (gamePrice != null) return gamePrice;
+          if (gamePrice != null) {
+            console.log('Fetched from DB:', title);
+            return gamePrice;
+          }
 
           const steamPrice = await getSteamTitlePrice(title);
           await saveGamePriceToDB(steamPrice);
+          console.log('Saved to DB', title);
           return steamPrice;
         })();
       })
@@ -66,7 +70,7 @@ router.post('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      error,
     });
   }
 });
