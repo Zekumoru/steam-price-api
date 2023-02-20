@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
 
           const steamPrice = await getSteamTitlePrice(title);
           await saveGamePriceToDB(steamPrice);
-          console.log('Saved to DB', title);
+          console.log('Saved to DB:', title);
           return steamPrice;
         })();
       })
