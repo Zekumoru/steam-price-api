@@ -11,7 +11,7 @@ const getSteamSearchResults = async (search) => {
 
   $('[data-ds-appid]').each((i, item) => {
     const title = $(item).find('.title').text().trim();
-    const price = $(item).find('.search_price').text().trim();
+    const price = $(item).find('.discount_final_price').text().trim();
     results.push({ title, price });
   });
 
