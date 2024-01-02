@@ -1,5 +1,4 @@
-import './load-env.js';
-import bodyParser from 'body-parser';
+import 'dotenv/config.js';
 import express from 'express';
 import cors from 'cors';
 import router from './routes/router.js';
@@ -18,7 +17,7 @@ db.on('open', () => console.log('Connected to database'));
 
 app.use(cors());
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use('/steam-price', router);
 
 app.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
